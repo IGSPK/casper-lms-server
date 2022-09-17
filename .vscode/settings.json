@@ -1,0 +1,45 @@
+{
+  "hidefiles.configurationType": "local",
+  "hidefiles.globalConfig": {
+    "profiles": [
+      {
+        "name": "Default",
+        "detail": "",
+        "description": "Test",
+        "hidden": [".vscode/"]
+      },
+      {
+        "name": "Strict",
+        "detail": "Hide everything not immediately required",
+        "hidden": [
+          "$Default",
+          "node_modules/",
+          "test/",
+          ".eslintrc.js",
+          ".gitignore",
+          ".prettierrc",
+          "nest-cli.json",
+          "package-lock.json",
+          "package.json",
+          "README.md",
+          "tsconfig.build.json",
+          "tsconfig.json",
+          ".gitignore",
+          "src/api/node_modules/",
+          "src/api/.gitignore",
+          "src/api/package-lock.json",
+          "src/api/package.json"
+        ]
+      }
+    ]
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true
+  },
+  "hidefiles.selectedProfile": "Show All Files",
+  "hide-files.files": []
+}

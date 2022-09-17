@@ -1,0 +1,11 @@
+{
+  "name": "igs-casper-lms-api",
+  "version": "0.0.14",
+  "main": "index.ts",
+  "dependencies": {
+    "@angular/common": "^14.1.0",
+    "@angular/core": "^14.1.0",
+    "igs-casper-lms-common": "^0.0.13",
+    "rxjs": "~7.5.0"
+  }
+}
