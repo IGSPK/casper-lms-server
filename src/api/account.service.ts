@@ -1,10 +1,4 @@
-import {
-  AccountService,
-  AuthDto,
-  ForgotPasswordModel,
-  LoginModel,
-  RegisterModel,
-} from 'igs-casper-lms-common/account';
+import { AccountService, AuthDto } from 'igs-casper-lms-common/account';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -12,14 +6,14 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AccountHttpService implements AccountService {
   constructor(private http: HttpClient) {}
-  register(model: RegisterModel): Observable<AuthDto> {
+  register(): Observable<AuthDto> {
     throw new Error('Method not implemented.');
   }
-  forgotPassword(model: ForgotPasswordModel): Observable<boolean> {
+  forgotPassword(): Observable<boolean> {
     return new Observable<boolean>((o) => o.next(true));
   }
 
-  login(model: LoginModel): Observable<AuthDto> {
+  login(): Observable<AuthDto> {
     throw new Error('Method not implemented.');
   }
 }
