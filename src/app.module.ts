@@ -7,4 +7,4 @@ import { AccountController } from './account.controller';
   providers: [],
 })
 // comment added
-export class AppModule { }
+export class AppModule {}
