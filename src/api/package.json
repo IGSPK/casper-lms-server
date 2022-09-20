@@ -7,5 +7,8 @@
     "@angular/core": "^14.1.0",
     "igs-casper-lms-common": "^0.0.15",
     "rxjs": "~7.5.0"
+  },
+  "scripts": {
+    "prepare": "husky install"
   }
 }
