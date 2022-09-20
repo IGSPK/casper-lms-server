@@ -41,5 +41,6 @@
     "**/.DS_Store": true
   },
   "hidefiles.selectedProfile": "Show All Files",
-  "hide-files.files": []
+  "hide-files.files": [],
+  "vsicons.presets.angular": true
 }
