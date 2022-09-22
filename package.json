@@ -19,9 +19,6 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "push": "cd src/api && npm i igs-casper-lms-common@latest && npm version patch && npm publish",
-    "pull": "npm i igs-casper-lms-common@latest && cd src/api && npm i igs-casper-lms-common@latest",
-    "install:all": "npm i && cd src/api && npm i",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -31,7 +28,6 @@
     "@nestjs/platform-express": "^9.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
-    "igs-casper-lms-common": "^0.0.15",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
@@ -48,6 +44,7 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "casper-lms-types": "^0.0.7",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
