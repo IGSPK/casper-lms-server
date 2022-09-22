@@ -1,15 +1,25 @@
-import { Controller } from '@nestjs/common';
-import { AuthDto, IAccountService } from 'igs-casper-lms-common/account';
-import { Observable } from 'rxjs';
+import { Controller, Post, Body } from '@nestjs/common';
+import {
+  AuthDto,
+  ForgotPasswordModel,
+  IAccountService,
+  LoginModel,
+} from 'casper-lms-types/definition';
+
 @Controller('account')
 export class AccountController implements IAccountService {
-  login(): Promise<AuthDto> | Observable<AuthDto> {
-    throw new Error('Method not implemented.');
+  @Post('login')
+  login(@Body() model: LoginModel): Promise<AuthDto> {
+    return Promise.resolve({
+      avatar: 'string',
+      name: 'string',
+      email: 'string',
+      token: 'string',
+      role: 'string',
+    });
   }
-  forgotPassword(): Promise<boolean> | Observable<boolean> {
-    throw new Error('Method not implemented.');
-  }
-  register(): Promise<AuthDto> | Observable<AuthDto> {
-    throw new Error('Method not implemented.');
+  @Post('forgotPassword')
+  forgotPassword(@Body() model: ForgotPasswordModel): Promise<boolean> {
+    return Promise.resolve(true);
   }
 }
