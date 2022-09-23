@@ -22,4 +22,6 @@ export class AccountController implements IAccountService {
   forgotPassword(@Body() model: ForgotPasswordModel): Promise<boolean> {
     return Promise.resolve(true);
   }
+
+  // controller comment
 }
