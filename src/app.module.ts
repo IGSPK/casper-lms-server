@@ -19,6 +19,7 @@ const dbConfig = TypeOrmModule.forRoot({
   entities: [User, LocalFile, Course],
   synchronize: true,
 })
+// comment
 
 @Module({
   imports: [dbConfig, AccountModule, AdminModule],
