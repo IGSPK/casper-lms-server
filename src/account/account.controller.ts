@@ -1,5 +1,5 @@
 import { User } from './../_entities/user.entity';
-import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, Get } from '@nestjs/common';
 import {
   AuthDto,
   ForgotPasswordModel,
@@ -20,7 +20,7 @@ export class AccountController implements IAccountService {
 
 
   @Post('login')
-  async login(@Body() model: any): Promise<AuthDto> {
+  async login(@Body() model: LoginModel): Promise<AuthDto> {
 
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound || userFound.password !== model.password) {
@@ -36,16 +36,15 @@ export class AccountController implements IAccountService {
       role: userFound.role,
     }
   }
-  @Post('forget-password')
-  async forgotPassword(@Body() model: any): Promise<boolean> {
+  @Post('forgot-password')
+  async forgotPassword(@Body() model: ForgotPasswordModel): Promise<boolean> {
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound) {
       throw new HttpException({ email: 'invalid email' }, HttpStatus.UNAUTHORIZED);
     }
     userFound.otp = 1234
-    const minutes = 30
+    const minutes = 5
     userFound.otpExpiry = new Date(new Date().getTime() + minutes * 60000);
-    console.log(userFound.name)
     await this.userRepo.save(userFound)
     return true
   }
@@ -57,10 +56,10 @@ export class AccountController implements IAccountService {
     if (!userFound) {
       throw new HttpException({ email: 'invalid email' }, HttpStatus.UNAUTHORIZED);
     }
-    if (userFound.otp == model.otp) {
+    if (userFound.otp == model.otp && userFound.otpExpiry > new Date()) {
       return true
     } else {
-      throw new HttpException({ otp: 'invalid otp' }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException({ otp: 'invalid otp or otp expired' }, HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -71,12 +70,17 @@ export class AccountController implements IAccountService {
     if (!foundUser) {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED)
     } else {
+      foundUser.otp = null
       foundUser.password = model.password
       await this.userRepo.save(foundUser)
       return {
         status: "password successfully changed please login again with new password"
       }
     }
+  }
+  @Get('get')
+  get() {
+    return "success response"
   }
   // comment added
 }

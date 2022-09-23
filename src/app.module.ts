@@ -3,6 +3,9 @@ import { AccountController } from './account/account.controller';
 import { AccountModule } from './account/account.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './_entities/user.entity';
+import { AdminModule } from './admin/admin.module';
+import LocalFile from './_entities/localFile.entity';
+import { Course } from './_entities/course.entity';
 
 
 
@@ -13,12 +16,12 @@ const dbConfig = TypeOrmModule.forRoot({
   username: 'root',
   password: '',
   database: 'slms-db',
-  entities: [User],
+  entities: [User, LocalFile, Course],
   synchronize: true,
 })
 
 @Module({
-  imports: [AccountModule, dbConfig],
+  imports: [dbConfig, AccountModule, AdminModule],
   controllers: [],
   providers: [],
 })
