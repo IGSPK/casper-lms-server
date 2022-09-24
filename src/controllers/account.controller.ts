@@ -16,11 +16,11 @@ import {
 export class AccountController implements IAccountService {
   @Post('login')
   login(@Body() model: LoginModel): Promise<AuthDto> {
-    throw new Error('Not implemented exception')
+    throw new Error('Not implemented exception');
   }
 
   @Post('forgotPassword')
   forgotPassword(@Body() model: ForgotPasswordModel): Promise<boolean> {
-    throw new Error('Not implemented exception')
+    throw new Error('Not implemented exception');
   }
 }

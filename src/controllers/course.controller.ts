@@ -10,7 +10,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsNotEmpty } from 'class-validator';
 import { randomInt } from 'crypto';
-import { imageParseFilePipeBuilder, makePublicPath } from 'src/helpers/file.helper';
+import {
+  imageParseFilePipeBuilder,
+  makePublicPath,
+} from 'src/helpers/file.helper';
 import { Request, Response } from 'express';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,11 +34,15 @@ class CourseDto {
 
 @Controller('courses')
 export class CourseController {
-  constructor(private storage: StorageService) { }
+  constructor(private storage: StorageService) {}
 
   @Post('create')
   @UseInterceptors(FileInterceptor('thumbnail'))
-  upload(@Body() model: CreateCourseModel, @UploadedFile(imageParseFilePipeBuilder) thumbnail: Express.Multer.File, @Req() req: Request): Promise<CourseDto> {
+  upload(
+    @Body() model: CreateCourseModel,
+    @UploadedFile(imageParseFilePipeBuilder) thumbnail: Express.Multer.File,
+    @Req() req: Request,
+  ): Promise<CourseDto> {
     // makePublicPath is a custom function decalred in helper
     // first argument is folder name and second argument is multer file
     const path = makePublicPath('thumbnails', thumbnail, req);
@@ -43,13 +50,12 @@ export class CourseController {
     // pass multer file buffer to store file on created path
     this.storage.getDisk().put(path.store, thumbnail.buffer);
 
-    // return response with thumbnail path. attach 
+    // return response with thumbnail path. attach
     return Promise.resolve({
       id: randomInt(1000),
       name: model.name,
       // makeFullPath returns full path to the file including protocoal and host address
-      thumbnail: path.serve
+      thumbnail: path.serve,
     });
   }
-
 }

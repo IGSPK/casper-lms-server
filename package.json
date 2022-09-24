@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install",
-    "server": "node ./dist/main.js"
+    "server": "node ./dist/main.js",
+    "pretty": "prettier --write \"./**/*.{ts,json}\""
   },
   "dependencies": {
     "@codebrew/nestjs-storage": "^0.1.7",

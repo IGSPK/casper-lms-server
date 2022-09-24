@@ -16,18 +16,15 @@ const MyStorageModule = StorageModule.forRoot({
       },
     },
   },
-})
+});
 
 const MyServeStaticModule = ServeStaticModule.forRoot({
-  rootPath: join(__dirname, '..', 'public')
-})
+  rootPath: join(__dirname, '..', 'public'),
+});
 
 @Module({
-  imports: [
-    MyStorageModule,
-    MyServeStaticModule
-  ],
+  imports: [MyStorageModule, MyServeStaticModule],
   controllers: [AppController, AccountController, CourseController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
