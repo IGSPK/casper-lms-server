@@ -1,4 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import {
   AuthDto,
   ForgotPasswordModel,
@@ -10,18 +16,11 @@ import {
 export class AccountController implements IAccountService {
   @Post('login')
   login(@Body() model: LoginModel): Promise<AuthDto> {
-    return Promise.resolve({
-      avatar: 'string',
-      name: 'string',
-      email: 'string',
-      token: 'string',
-      role: 'string',
-    });
-  }
-  @Post('forgotPassword')
-  forgotPassword(@Body() model: ForgotPasswordModel): Promise<boolean> {
-    return Promise.resolve(true);
+    throw new Error('Not implemented exception')
   }
 
-  // controller comment
+  @Post('forgotPassword')
+  forgotPassword(@Body() model: ForgotPasswordModel): Promise<boolean> {
+    throw new Error('Not implemented exception')
+  }
 }
