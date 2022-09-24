@@ -27,16 +27,6 @@ const dbConfig = TypeOrmModule.forRoot({
   synchronize: true,
 })
 
-
-@Module({
-  imports: [dbConfig, AccountModule, AdminModule],
-  controllers: [],
-  providers: [],
-})
-
-export class AppModule { }
-
-
 const MyStorageModule = StorageModule.forRoot({
   default: 'local',
   disks: {
@@ -54,9 +44,10 @@ const MyServeStaticModule = ServeStaticModule.forRoot({
 });
 
 @Module({
-  imports: [MyStorageModule, MyServeStaticModule],
-  controllers: [AppController, AccountController, CourseController],
+  imports: [dbConfig, AccountModule, AdminModule, MyStorageModule, MyServeStaticModule],
+  controllers: [],
   providers: [],
 })
-export class AppModule {}
+
+export class AppModule { }
 
