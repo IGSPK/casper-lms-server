@@ -40,12 +40,13 @@ const MyStorageModule = StorageModule.forRoot({
 });
 
 const MyServeStaticModule = ServeStaticModule.forRoot({
-  rootPath: join(__dirname, '..', 'public'),
+  rootPath: join(__dirname, '../', 'public'),
+  exclude: ['/api*'],
 });
 
 @Module({
-  imports: [dbConfig, AccountModule, AdminModule, MyStorageModule],
-  controllers: [],
+  imports: [MyServeStaticModule, MyStorageModule, dbConfig, AccountModule, AdminModule],
+  controllers: [AppController],
   providers: [],
 })
 

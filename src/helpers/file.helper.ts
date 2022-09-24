@@ -19,7 +19,7 @@ const makePath = (
   const store = `${disk}/${folder}/${fileName}`;
   return {
     store,
-    serve: `${req.protocol}://${req.get('Host')}/${folder}/${fileName}`,
+    serve: `${req.protocol}://${req.get('Host')}/${disk}/${folder}/${fileName}`,
   };
 };
 export const makePublicPath = (
