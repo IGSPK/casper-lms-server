@@ -5,12 +5,12 @@ import { AccountModule } from './account/account.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './_entities/user.entity';
 import { AdminModule } from './admin/admin.module';
-import LocalFile from './_entities/localFile.entity';
+
 import { Course } from './_entities/course.entity';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { DriverType, StorageModule } from '@codebrew/nestjs-storage';
-import { CourseController } from './controllers/course.controller';
+import { CourseController } from './admin/course.controller';
 import { AppController } from './controllers/app.controller';
 import { join } from 'path';
 
@@ -23,7 +23,7 @@ const dbConfig = TypeOrmModule.forRoot({
   username: 'root',
   password: '',
   database: 'slms-db',
-  entities: [User, LocalFile, Course],
+  entities: [User, Course],
   synchronize: true,
 })
 
@@ -44,7 +44,7 @@ const MyServeStaticModule = ServeStaticModule.forRoot({
 });
 
 @Module({
-  imports: [dbConfig, AccountModule, AdminModule, MyStorageModule, MyServeStaticModule],
+  imports: [dbConfig, AccountModule, AdminModule, MyStorageModule],
   controllers: [],
   providers: [],
 })

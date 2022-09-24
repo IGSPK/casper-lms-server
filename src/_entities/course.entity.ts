@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
-import LocalFile from "./localFile.entity";
+
 
 
 
@@ -9,7 +9,6 @@ export class Course {
     id: number
     @Column()
     name: string
-    @OneToOne(() => LocalFile)
-    @JoinColumn()
-    file: LocalFile
+    @Column()
+    thumbnail: string
 }

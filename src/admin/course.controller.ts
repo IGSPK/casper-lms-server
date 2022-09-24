@@ -6,6 +6,7 @@ import {
   UseInterceptors,
   Body,
   Req,
+  Get
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsNotEmpty } from 'class-validator';
@@ -15,6 +16,9 @@ import {
   makePublicPath,
 } from 'src/helpers/file.helper';
 import { Request, Response } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Course } from 'src/_entities/course.entity';
+import { Repository } from 'typeorm';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Temp Models and dtos
@@ -34,11 +38,14 @@ class CourseDto {
 
 @Controller('courses')
 export class CourseController {
-  constructor(private storage: StorageService) {}
+  constructor(
+    private storage: StorageService,
+    @InjectRepository(Course) private course: Repository<Course>
+  ) { }
 
   @Post('create')
   @UseInterceptors(FileInterceptor('thumbnail'))
-  upload(
+  async upload(
     @Body() model: CreateCourseModel,
     @UploadedFile(imageParseFilePipeBuilder) thumbnail: Express.Multer.File,
     @Req() req: Request,
@@ -50,6 +57,20 @@ export class CourseController {
     // pass multer file buffer to store file on created path
     this.storage.getDisk().put(path.store, thumbnail.buffer);
 
+
+    // save the course to database
+    const course = new Course()
+    course.name = model.name
+    course.thumbnail = path.serve
+    const savedCourse = await this.course.save(course)
+
+    return {
+      id: savedCourse.id,
+      name: savedCourse.name,
+      thumbnail: savedCourse.thumbnail
+    }
+
+
     // return response with thumbnail path. attach
     return Promise.resolve({
       id: randomInt(1000),
@@ -58,4 +79,12 @@ export class CourseController {
       thumbnail: path.serve,
     });
   }
+
+
+  @Get()
+  async courses() {
+    const courses = await this.course.find()
+    return courses
+  }
+
 }

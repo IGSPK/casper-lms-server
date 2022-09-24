@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Course } from 'src/_entities/course.entity';
-import LocalFile from 'src/_entities/localFile.entity';
+
 import { AdminController } from './admin.controller';
+import { CourseController } from './course.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LocalFile, Course])],
-  controllers: [AdminController]
+  imports: [TypeOrmModule.forFeature([Course])],
+  controllers: [AdminController, CourseController]
 })
 export class AdminModule { }
