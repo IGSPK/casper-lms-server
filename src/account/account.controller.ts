@@ -6,12 +6,15 @@ import {
   ForgotPasswordModel,
   IAccountService,
   LoginModel,
+  OTPDto,
+  OTPModel,
   ResetPasswordModel,
 } from 'casper-lms-types/definition';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { nodemailer } from 'nodemailer'
+import { Observable } from 'rxjs';
 
 @Controller('account')
 export class AccountController implements IAccountService {
@@ -19,6 +22,9 @@ export class AccountController implements IAccountService {
     @InjectRepository(User) private userRepo: Repository<User>,
     private jwt: JwtService
   ) { }
+  verifyOTP(model: OTPModel): Promise<OTPDto> | Observable<OTPDto> {
+    throw new Error('Method not implemented.');
+  }
 
 
   @Post('login')
@@ -72,21 +78,24 @@ export class AccountController implements IAccountService {
 
 
   @Post('verify-otp')
-  async verifyOtp(@Body() model: any) {
+  async verifyOtp(@Body() model: OTPModel): Promise<OTPDto> {
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound) {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
     }
     if (userFound.otp == model.otp && userFound.otpExpiry > new Date()) {
-      return true
+      return { email: userFound.email }
     } else {
       throw new HttpException('invalid otp or otp expired', HttpStatus.UNAUTHORIZED);
     }
   }
 
   @Post('reset-password')
-  async resetPassword(@Body() model: ResetPasswordModel): Promise<any> {
+  async resetPassword(@Body() model: ResetPasswordModel): Promise<boolean> {
 
+    if (model.password != model.confirmPassword) {
+      throw new HttpException('password and confirm password must match', HttpStatus.UNAUTHORIZED)
+    }
     const foundUser = await this.userRepo.findOneBy({ email: model.email })
     if (!foundUser) {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED)
@@ -94,15 +103,10 @@ export class AccountController implements IAccountService {
       foundUser.otp = null
       foundUser.password = model.password
       await this.userRepo.save(foundUser)
-      return {
-        status: "password successfully changed please login again with new password"
-      }
+      return true
     }
   }
-  @Get('get')
-  get() {
-    return "success response"
-  }
+
   // comment added
 
 
