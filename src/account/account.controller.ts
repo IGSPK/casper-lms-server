@@ -2,14 +2,16 @@ import { User } from './../_entities/user.entity';
 import { Controller, Post, Body, HttpException, HttpStatus, Get } from '@nestjs/common';
 import {
   AuthDto,
+  ForgetPasswordDTO,
   ForgotPasswordModel,
   IAccountService,
   LoginModel,
+  ResetPasswordModel,
 } from 'casper-lms-types/definition';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
-
+import { nodemailer } from 'nodemailer'
 
 @Controller('account')
 export class AccountController implements IAccountService {
@@ -24,7 +26,7 @@ export class AccountController implements IAccountService {
 
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound || userFound.password !== model.password) {
-      throw new HttpException({ email: 'invalid email or password' }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException('invalid email or password', HttpStatus.UNAUTHORIZED);
     }
     const payload = { id: userFound.id, email: userFound.email, }
     const accessToken = this.jwt.sign(payload)
@@ -37,16 +39,35 @@ export class AccountController implements IAccountService {
     }
   }
   @Post('forgot-password')
-  async forgotPassword(@Body() model: ForgotPasswordModel): Promise<boolean> {
+  async forgotPassword(@Body() model: ForgotPasswordModel): Promise<ForgetPasswordDTO> {
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound) {
-      throw new HttpException({ email: 'invalid email' }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
     }
     userFound.otp = 1234
-    const minutes = 5
+    const minutes = 2
     userFound.otpExpiry = new Date(new Date().getTime() + minutes * 60000);
     await this.userRepo.save(userFound)
-    return true
+    // Email Sndign start
+    // var transporter = nodemailer.createTransport({
+    //   host: "smtp.mailtrap.io",
+    //   port: 2525,
+    //   auth: {
+    //     user: "a7beaf47d739fe",
+    //     pass: "8e5d886f51cc65"
+    //   }
+    // });
+    // let info = await transporter.sendMail({
+    //   from: '" Fred Foo👻" <foo@example.com>',
+    //   to: userFound.email,
+    //   subject: "Forgot Password",
+    //   text: "Here is your OTP to verify your account and reset password?",
+    //   html: "<b>userFound.otp</b>",
+    // });
+    // console.log("Message sent: %s", info.messageId);
+    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Email sending End
+    return { email: userFound.email }
   }
 
 
@@ -54,17 +75,17 @@ export class AccountController implements IAccountService {
   async verifyOtp(@Body() model: any) {
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound) {
-      throw new HttpException({ email: 'invalid email' }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
     }
     if (userFound.otp == model.otp && userFound.otpExpiry > new Date()) {
       return true
     } else {
-      throw new HttpException({ otp: 'invalid otp or otp expired' }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException('invalid otp or otp expired', HttpStatus.UNAUTHORIZED);
     }
   }
 
   @Post('reset-password')
-  async resetPassword(@Body() model: any): Promise<any> {
+  async resetPassword(@Body() model: ResetPasswordModel): Promise<any> {
 
     const foundUser = await this.userRepo.findOneBy({ email: model.email })
     if (!foundUser) {
@@ -83,4 +104,7 @@ export class AccountController implements IAccountService {
     return "success response"
   }
   // comment added
+
+
+
 }
