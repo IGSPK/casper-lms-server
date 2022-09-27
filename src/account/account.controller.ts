@@ -22,10 +22,6 @@ export class AccountController implements IAccountService {
     @InjectRepository(User) private userRepo: Repository<User>,
     private jwt: JwtService
   ) { }
-  verifyOTP(model: OTPModel): Promise<OTPDto> | Observable<OTPDto> {
-    throw new Error('Method not implemented.');
-  }
-
 
   @Post('login')
   async login(@Body() model: LoginModel): Promise<AuthDto> {
@@ -78,7 +74,7 @@ export class AccountController implements IAccountService {
 
 
   @Post('verify-otp')
-  async verifyOtp(@Body() model: OTPModel): Promise<OTPDto> {
+  async verifyOTP(@Body() model: OTPModel): Promise<OTPDto> {
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound) {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
