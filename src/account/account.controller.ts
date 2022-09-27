@@ -1,5 +1,5 @@
 import { User } from './../_entities/user.entity';
-import { Controller, Post, Body, HttpException, HttpStatus, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
 import {
   AuthDto,
   ForgetPasswordDTO,
@@ -13,7 +13,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
-import { nodemailer } from 'nodemailer'
+// import { nodemailer } from 'nodemailer'
 import { Observable } from 'rxjs';
 
 @Controller('account')
