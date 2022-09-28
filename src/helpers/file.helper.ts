@@ -25,8 +25,10 @@ const makePath = (
       `/${folder}/${fileName}`,
   };
 };
-export const makePublicPath = (
-  folder: string,
-  file: Express.Multer.File,
-  req: Request,
-) => makePath('public', folder, file, req);
+export const
+
+  makePublicPath = (
+    folder: string,
+    file: Express.Multer.File,
+    req: Request,
+  ) => makePath('public', folder, file, req);
