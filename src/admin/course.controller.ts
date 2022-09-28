@@ -1,3 +1,5 @@
+import { Course } from 'src/_entities/course.entity';
+import { Lecture } from './../_entities/lecture.entity';
 import { StorageService } from '@codebrew/nestjs-storage';
 import {
   Controller,
@@ -17,23 +19,51 @@ import {
 } from 'src/helpers/file.helper';
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Course } from 'src/_entities/course.entity';
 import { Repository } from 'typeorm';
 import { CourseDto, CreateCourseModel } from 'casper-lms-types';
+import { Video } from 'src/_entities/video.entity';
 
 
+
+// Temporary models and dtos
+interface LectureModel {
+  no: number;
+  name: string;
+  courseID: number
+}
+interface VideoModel {
+  no: number;
+  name: string;
+  lectureID: number
+}
+
+interface LectureDTO {
+  id: number;
+  no: number;
+  name: string;
+  courseID: number
+}
+interface VideoDTO {
+  id: number;
+  no: number;
+  name: string;
+  video: string;
+  lectureID: number
+}
 
 @Controller('courses')
 export class CourseController {
   constructor(
     private storage: StorageService,
-    @InjectRepository(Course) private course: Repository<Course>
+    @InjectRepository(Course) private course: Repository<Course>,
+    @InjectRepository(Lecture) private lecture: Repository<Lecture>,
+    @InjectRepository(Video) private video: Repository<Video>,
   ) { }
 
   @Post('create')
   @UseInterceptors(FileInterceptor('thumbnail'))
   async upload(
-    @Body() model: CreateCourseModel,
+    @Body() model,
     @UploadedFile(imageParseFilePipeBuilder) thumbnail: Express.Multer.File,
     @Req() req: Request,
   ): Promise<CourseDto> {
@@ -69,6 +99,48 @@ export class CourseController {
     return courses
   }
 
-  // course completed
+  @Post('add-lecture')
+  async addLecture(@Body() model: LectureModel): Promise<LectureDTO> {
+
+    const course = await this.course.findOneBy({ id: model.courseID })
+
+    const newLecture = new Lecture()
+    newLecture.no = model.no
+    newLecture.name = model.name
+    newLecture.course = Promise.resolve(course)
+    const savedLecture = await this.lecture.save(newLecture);
+    return {
+      id: (savedLecture).id,
+      no: Number(savedLecture.no),
+      name: savedLecture.name,
+      courseID: (await savedLecture.course).id
+    }
+  }
+
+
+  @Post('add-video')
+  @UseInterceptors(FileInterceptor('video'))
+  async addVideo(
+    @Body() model: VideoModel,
+    @UploadedFile() video: Express.Multer.File,
+    @Req() req: Request
+  ): Promise<VideoDTO> {
+    const lecture = await this.lecture.findOneBy({ id: model.lectureID })
+    const path = makePublicPath('videos', video, req);
+    this.storage.getDisk().put(path.store, video.buffer);
+    const newVideo = new Video()
+    newVideo.no = model.no
+    newVideo.name = model.name
+    newVideo.video = path.serve
+    newVideo.lecture = Promise.resolve(lecture)
+    const savedVideo = await this.video.save(newVideo);
+    return {
+      id: (savedVideo).id,
+      no: Number(savedVideo.no),
+      name: savedVideo.name,
+      video: savedVideo.video,
+      lectureID: (await savedVideo.lecture).id
+    }
+  }
 
 }
