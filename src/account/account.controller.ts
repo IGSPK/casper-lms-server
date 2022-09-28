@@ -47,7 +47,7 @@ export class AccountController implements IAccountService {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
     }
     userFound.otp = 1234
-    const minutes = 2
+    const minutes = 30
     userFound.otpExpiry = new Date(new Date().getTime() + minutes * 60000);
     await this.userRepo.save(userFound)
     // Email Sndign start
@@ -80,7 +80,7 @@ export class AccountController implements IAccountService {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
     }
     if (userFound.otp == model.otp && userFound.otpExpiry > new Date()) {
-      return { email: userFound.email }
+      return { email: userFound.email, otp: userFound.otp }
     } else {
       throw new HttpException('invalid otp or otp expired', HttpStatus.UNAUTHORIZED);
     }
@@ -95,12 +95,16 @@ export class AccountController implements IAccountService {
     const foundUser = await this.userRepo.findOneBy({ email: model.email })
     if (!foundUser) {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED)
-    } else {
-      foundUser.otp = null
-      foundUser.password = model.password
-      await this.userRepo.save(foundUser)
-      return true
     }
+    if (foundUser.otp != model.otp) {
+      throw new HttpException('invalid otp', HttpStatus.UNAUTHORIZED)
+    }
+    foundUser.otp = null
+    foundUser.otpExpiry = null
+    foundUser.password = model.password
+    await this.userRepo.save(foundUser)
+    return true
+
   }
 
   // comment added
