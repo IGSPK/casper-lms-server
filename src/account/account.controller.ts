@@ -1,14 +1,23 @@
 import { User } from './../_entities/user.entity';
-import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import {
   AuthDto,
   ForgetPasswordDTO,
   ForgotPasswordModel,
   IAccountService,
+  ISettingUpdateService,
   LoginModel,
   OTPDto,
   OTPModel,
   ResetPasswordModel,
+  UpdatePasswordModel,
+  UpdateProfileModel,
 } from 'casper-lms-types/definition';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -17,21 +26,33 @@ import { Repository } from 'typeorm';
 import { Observable } from 'rxjs';
 
 @Controller('account')
-export class AccountController implements IAccountService {
+export class AccountController
+  implements IAccountService, ISettingUpdateService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
-    private jwt: JwtService
+    private jwt: JwtService,
   ) { }
-
+  saveChanges(
+    model: UpdateProfileModel,
+  ): Promise<AuthDto> | Observable<AuthDto> {
+    throw new Error('Method not implemented.');
+  }
+  updatePassword(
+    model: UpdatePasswordModel,
+  ): Promise<boolean> | Observable<boolean> {
+    throw new Error('Method not implemented.');
+  }
   @Post('login')
   async login(@Body() model: LoginModel): Promise<AuthDto> {
 
     const userFound = await this.userRepo.findOneBy({ email: model.email })
     if (!userFound || userFound.password !== model.password) {
-      throw new HttpException('invalid email or password', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'invalid email or password',
+        HttpStatus.UNAUTHORIZED);
     }
-    const payload = { id: userFound.id, email: userFound.email, }
-    const accessToken = this.jwt.sign(payload)
+    const payload = { id: userFound.id, email: userFound.email }
+    const accessToken = this.jwt.sign(payload);
     return {
       avatar: 'https://xsgames.co/randomusers/assets/images/favicon.png',
       name: userFound.name,
@@ -41,15 +62,17 @@ export class AccountController implements IAccountService {
     }
   }
   @Post('forgot-password')
-  async forgotPassword(@Body() model: ForgotPasswordModel): Promise<ForgetPasswordDTO> {
-    const userFound = await this.userRepo.findOneBy({ email: model.email })
+  async forgotPassword(
+    @Body() model: ForgotPasswordModel,
+  ): Promise<ForgetPasswordDTO> {
+    const userFound = await this.userRepo.findOneBy({ email: model.email });
     if (!userFound) {
       throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
     }
-    userFound.otp = 1234
-    const minutes = 30
+    userFound.otp = 1234;
+    const minutes = 30;
     userFound.otpExpiry = new Date(new Date().getTime() + minutes * 60000);
-    await this.userRepo.save(userFound)
+    await this.userRepo.save(userFound);
     // Email Sndign start
     // var transporter = nodemailer.createTransport({
     //   host: "smtp.mailtrap.io",
@@ -82,7 +105,10 @@ export class AccountController implements IAccountService {
     if (userFound.otp == model.otp && userFound.otpExpiry > new Date()) {
       return { email: userFound.email, otp: userFound.otp }
     } else {
-      throw new HttpException('invalid otp or otp expired', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'invalid otp or otp expired',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 
@@ -90,25 +116,22 @@ export class AccountController implements IAccountService {
   async resetPassword(@Body() model: ResetPasswordModel): Promise<boolean> {
 
     if (model.password != model.confirmPassword) {
-      throw new HttpException('password and confirm password must match', HttpStatus.UNAUTHORIZED)
+      throw new HttpException(
+        'password and confirm password must match',
+        HttpStatus.UNAUTHORIZED,
+      )
     }
-    const foundUser = await this.userRepo.findOneBy({ email: model.email })
+    const foundUser = await this.userRepo.findOneBy({ email: model.email });
     if (!foundUser) {
-      throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED)
+      throw new HttpException('invalid email', HttpStatus.UNAUTHORIZED);
     }
     if (foundUser.otp != model.otp) {
-      throw new HttpException('invalid otp', HttpStatus.UNAUTHORIZED)
+      throw new HttpException('invalid otp', HttpStatus.UNAUTHORIZED);
     }
     foundUser.otp = null
     foundUser.otpExpiry = null
     foundUser.password = model.password
     await this.userRepo.save(foundUser)
     return true
-
-  }
-
-  // comment added
-
-
-
+  };
 }

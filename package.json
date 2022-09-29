@@ -35,7 +35,7 @@
     "@nestjs/serve-static": "^3.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "@slynova/flydrive": "^1.0.3",
-    "casper-lms-types": "^0.0.14",
+    "casper-lms-types": "^0.0.17",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "mysql2": "^2.3.3",

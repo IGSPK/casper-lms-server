@@ -1,3 +1,4 @@
+import { CourseDto, CreateCourseModel } from './../../dist/casper-lms-web/src/types/definition/admin.d';
 import { Course } from 'src/_entities/course.entity';
 import { Lecture } from './../_entities/lecture.entity';
 import { StorageService } from '@codebrew/nestjs-storage';
@@ -11,7 +12,6 @@ import {
   Get
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-
 import { randomInt } from 'crypto';
 import {
   imageParseFilePipeBuilder,
@@ -20,35 +20,32 @@ import {
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CourseDto, CreateCourseModel } from 'casper-lms-types';
 import { Video } from 'src/_entities/video.entity';
-
-
-
+import { Observable } from 'rxjs';
 // Temporary models and dtos
 interface LectureModel {
   no: number;
   name: string;
-  courseID: number
+  courseID: number;
 }
 interface VideoModel {
   no: number;
   name: string;
-  lectureID: number
+  lectureID: number;
 }
 
 interface LectureDTO {
   id: number;
   no: number;
   name: string;
-  courseID: number
+  courseID: number;
 }
 interface VideoDTO {
   id: number;
   no: number;
   name: string;
   video: string;
-  lectureID: number
+  lectureID: number;
 }
 
 @Controller('courses')
@@ -59,11 +56,13 @@ export class CourseController {
     @InjectRepository(Lecture) private lecture: Repository<Lecture>,
     @InjectRepository(Video) private video: Repository<Video>,
   ) { }
-
+  createCourse(model: CreateCourseModel): Promise<CourseDto> | Observable<any> {
+    throw new Error('Method not implemented.');
+  }
   @Post('create')
   @UseInterceptors(FileInterceptor('thumbnail'))
   async upload(
-    @Body() model,
+    @Body() model: CreateCourseModel,
     @UploadedFile(imageParseFilePipeBuilder) thumbnail: Express.Multer.File,
     @Req() req: Request,
   ): Promise<CourseDto> {
@@ -94,7 +93,7 @@ export class CourseController {
 
 
   @Get()
-  async courses() {
+  async getCourse() {
     const courses = await this.course.find()
     return courses
   }
