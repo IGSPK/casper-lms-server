@@ -6,9 +6,11 @@ import { User } from 'src/_entities/user.entity';
 import { jwtConstants } from 'src/_stratigies/jwt.strategy';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User]), JwtModule.register({
-        secret: jwtConstants.secret
-    }),],
+    imports: [
+        TypeOrmModule.forFeature([User]),
+        JwtModule.register({
+            secret: jwtConstants.secret
+        }),],
     controllers: [AccountController]
 })
 export class AccountModule { }

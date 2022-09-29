@@ -10,7 +10,9 @@ import { CourseController } from './course.controller';
 import { SubscriptionController } from './subscription.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Course, Lecture, Video, Subscription, User])],
-  controllers: [AdminController, CourseController, SubscriptionController]
+  imports: [
+    TypeOrmModule.forFeature([Course, Lecture, Video, Subscription, User]),
+  ],
+  controllers: [AdminController, CourseController, SubscriptionController],
 })
 export class AdminModule { }

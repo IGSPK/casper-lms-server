@@ -1,4 +1,4 @@
-import { CourseDto, Courses, CreateCourseModel, ICourseService } from './../../dist/casper-lms-web/src/types/definition/admin.d';
+import { CourseDto, CreateCourseModel } from './../../dist/casper-lms-web/src/types/definition/admin.d';
 import { Course } from 'src/_entities/course.entity';
 import { Lecture } from './../_entities/lecture.entity';
 import { StorageService } from '@codebrew/nestjs-storage';
@@ -12,7 +12,6 @@ import {
   Get
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-
 import { randomInt } from 'crypto';
 import {
   imageParseFilePipeBuilder,
@@ -23,33 +22,30 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Video } from 'src/_entities/video.entity';
 import { Observable } from 'rxjs';
-
-
-
 // Temporary models and dtos
 interface LectureModel {
   no: number;
   name: string;
-  courseID: number
+  courseID: number;
 }
 interface VideoModel {
   no: number;
   name: string;
-  lectureID: number
+  lectureID: number;
 }
 
 interface LectureDTO {
   id: number;
   no: number;
   name: string;
-  courseID: number
+  courseID: number;
 }
 interface VideoDTO {
   id: number;
   no: number;
   name: string;
   video: string;
-  lectureID: number
+  lectureID: number;
 }
 
 @Controller('courses')
@@ -63,8 +59,6 @@ export class CourseController {
   createCourse(model: CreateCourseModel): Promise<CourseDto> | Observable<any> {
     throw new Error('Method not implemented.');
   }
-
-
   @Post('create')
   @UseInterceptors(FileInterceptor('thumbnail'))
   async upload(

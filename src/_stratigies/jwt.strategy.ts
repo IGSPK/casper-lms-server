@@ -1,8 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
@@ -12,12 +10,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             secretOrKey: jwtConstants.secret,
         });
     }
-
     async validate(payload: any) {
         return payload;
     }
 }
-
 export const jwtConstants = {
     secret: 'secretKey',
 };

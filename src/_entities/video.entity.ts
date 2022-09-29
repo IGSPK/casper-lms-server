@@ -1,17 +1,16 @@
 
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Lecture } from './lecture.entity';
-
 @Entity()
 export class Video {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
     @Column()
-    name: string
+    name: string;
     @Column()
-    no: number
+    no: number;
     @Column()
-    video: string
+    video: string;
     @ManyToOne(() => Lecture, (lecture) => lecture.videos)
-    lecture: Promise<Lecture>
+    lecture: Promise<Lecture>;
 }

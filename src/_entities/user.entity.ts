@@ -10,16 +10,14 @@ export class User {
     @Column()
     password: string;
     @Column()
-    name: string
+    name: string;
     @Column()
-    role: string
+    role: string;
     @Column()
-    otp: number
+    otp: number;
     @Column()
     otpExpiry: Date;
-
-
-
     @OneToMany(() => Subscription, (subscription) => subscription.user)
-    subscriptions: Subscription[]
+    subscriptions: Subscription[];
+
 }
