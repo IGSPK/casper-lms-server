@@ -1,3 +1,4 @@
+import { CourseDto, Courses, CreateCourseModel, ICourseService } from './../../dist/casper-lms-web/src/types/definition/admin.d';
 import { Course } from 'src/_entities/course.entity';
 import { Lecture } from './../_entities/lecture.entity';
 import { StorageService } from '@codebrew/nestjs-storage';
@@ -20,8 +21,8 @@ import {
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CourseDto, CreateCourseModel } from 'casper-lms-types';
 import { Video } from 'src/_entities/video.entity';
+import { Observable } from 'rxjs';
 
 
 
@@ -59,11 +60,15 @@ export class CourseController {
     @InjectRepository(Lecture) private lecture: Repository<Lecture>,
     @InjectRepository(Video) private video: Repository<Video>,
   ) { }
+  createCourse(model: CreateCourseModel): Promise<CourseDto> | Observable<any> {
+    throw new Error('Method not implemented.');
+  }
+
 
   @Post('create')
   @UseInterceptors(FileInterceptor('thumbnail'))
   async upload(
-    @Body() model,
+    @Body() model: CreateCourseModel,
     @UploadedFile(imageParseFilePipeBuilder) thumbnail: Express.Multer.File,
     @Req() req: Request,
   ): Promise<CourseDto> {
@@ -94,7 +99,7 @@ export class CourseController {
 
 
   @Get()
-  async courses() {
+  async getCourse() {
     const courses = await this.course.find()
     return courses
   }

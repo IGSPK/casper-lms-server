@@ -5,10 +5,13 @@ import {
   ForgetPasswordDTO,
   ForgotPasswordModel,
   IAccountService,
+  ISettingUpdateService,
   LoginModel,
   OTPDto,
   OTPModel,
   ResetPasswordModel,
+  UpdatePasswordModel,
+  UpdateProfileModel,
 } from 'casper-lms-types/definition';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -17,11 +20,17 @@ import { Repository } from 'typeorm';
 import { Observable } from 'rxjs';
 
 @Controller('account')
-export class AccountController implements IAccountService {
+export class AccountController implements IAccountService, ISettingUpdateService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
     private jwt: JwtService
   ) { }
+  saveChanges(model: UpdateProfileModel): Promise<AuthDto> | Observable<AuthDto> {
+    throw new Error('Method not implemented.');
+  }
+  updatePassword(model: UpdatePasswordModel): Promise<boolean> | Observable<boolean> {
+    throw new Error('Method not implemented.');
+  }
 
   @Post('login')
   async login(@Body() model: LoginModel): Promise<AuthDto> {
