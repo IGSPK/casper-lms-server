@@ -2,30 +2,20 @@ import {
     Column,
     Entity,
     ManyToOne,
+    PrimaryColumn,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class Subscription {
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Subscription extends BaseEntity {
     @Column()
-    course_name: string;
-    @Column()
-    subscriber_name: string;
-    @Column()
-    subscriber_email: string;
+    course: string;
     @Column()
     slots: number;
     @Column()
     expiry: string;
-    @Column()
-    created_at: Date;
-    @Column()
-    subs_id: number;
-    @Column()
-    updated_at: Date;
     @ManyToOne(() => User, (user) => user.subscriptions)
-    user: Promise<User>;
+    user: User;
 }

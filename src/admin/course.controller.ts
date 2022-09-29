@@ -1,4 +1,4 @@
-import { CourseDto, CreateCourseModel } from './../../dist/casper-lms-web/src/types/definition/admin.d';
+
 import { Course } from 'src/_entities/course.entity';
 import { Lecture } from './../_entities/lecture.entity';
 import { StorageService } from '@codebrew/nestjs-storage';
@@ -22,31 +22,32 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Video } from 'src/_entities/video.entity';
 import { Observable } from 'rxjs';
+import { CourseDto, CreateCourseModel, LectureDTO, LectureModel } from 'casper-lms-types';
 // Temporary models and dtos
-interface LectureModel {
-  no: number;
-  name: string;
-  courseID: number;
-}
+// interface LectureModel {
+//   no: number;
+//   name: string;
+//   courseID: number;
+// }
 interface VideoModel {
   no: number;
   name: string;
   lectureID: number;
 }
 
-interface LectureDTO {
-  id: number;
-  no: number;
-  name: string;
-  courseID: number;
-}
-interface VideoDTO {
-  id: number;
-  no: number;
-  name: string;
-  video: string;
-  lectureID: number;
-}
+// interface LectureDTO {
+//   id: number;
+//   no: number;
+//   name: string;
+//   courseID: number;
+// }
+// interface VideoDTO {
+//   id: number;
+//   no: number;
+//   name: string;
+//   video: string;
+//   lectureID: number;
+// }
 
 @Controller('courses')
 export class CourseController {
@@ -123,7 +124,7 @@ export class CourseController {
     @Body() model: VideoModel,
     @UploadedFile() video: Express.Multer.File,
     @Req() req: Request
-  ): Promise<VideoDTO> {
+  ) {
     const lecture = await this.lecture.findOneBy({ id: model.lectureID })
     const path = makePublicPath('videos', video, req);
     this.storage.getDisk().put(path.store, video.buffer);
